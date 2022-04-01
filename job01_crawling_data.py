@@ -38,12 +38,13 @@ driver.implicitly_wait(10)
 
 df_data = pd.DataFrame()
 
-for l in range(1,2): # 의료과 입력 1:내과 27:핵의학과
+for l in range(5,6): # 의료과 입력 1:내과 27:핵의학과
     title_list = [] # 우리가 쓸 요소 리스트 만들기
     content_list = []
     department_list = []
     for k in range(1, 3): # 페이지 range 1 page ~ 3 page
-        url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=7010{l}&queryTime=2022-04-01%2011%3A39%3A23&page={k}' # l =과 , k = page
+        # url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=7010{l}&queryTime=2022-04-01%2011%3A39%3A23&page={k}' # l =과 , k = page, 큰 과 사용시
+        url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=701010{l}&queryTime=2022-04-01%2014%3A14%3A29&page={k}' # l =과 , k = page t, 세부 과 사용시
         driver.get(url) #url앞의 url 받기
         time.sleep(0.01)
         for i in range(1, 5): # page 안의 글, 총 20개
