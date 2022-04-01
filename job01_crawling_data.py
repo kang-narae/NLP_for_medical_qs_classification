@@ -16,7 +16,7 @@ def crawl_data():
         content = driver.find_element_by_xpath('//*[@id="content"]/div[1]/div/div[1]/div[3]').text # 글 찾아서 text 저장
         content = re.compile('[^가-힣a-zA-Z ]').sub(' ', content)# 필요한 것만 가지기
         title_list.append(title) # 만든 list에 추가
-        content_list.append(content)
+        content_list.append(content)   #컨텐츠 리스트, 타이틀 리스트, 분류 리스트에 더함.
         department_list.append(department)
         driver.get(url) # 한 번 클릭해서 들어 왔기 때문에 url을 다시 지정해 줘야한다
     except NoSuchElementException:
@@ -33,40 +33,52 @@ option.add_argument('--disable-dev-shm-usage')
 option.add_argument('disable-gpu')
 option.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36")
 
+option.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36")
+
+
 driver= webdriver.Chrome('./chromedriver', options = option)
 driver.implicitly_wait(10)
 
 
 df_data = pd.DataFrame()
 
-for l in range(17,18): # 의료과 입력 1:내과 27:핵의학과
+for l in range(2,3): # 의료과 입력 1:내과 27:핵의학과
     title_list = [] # 우리가 쓸 요소 리스트 만들기
     content_list = []
     department_list = []
     for k in range(1, 101): # 페이지 range 1 page ~ 500 page
-        url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=701{l}&queryTime=2022-04-01%2011%3A39%3A23&page={k}' # l =과 , k = page, 큰 과 사용시
+        # 11번째 페이지에 들어가자.
+        url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=70{l}&queryTime=2022-04-01%2011%3A39%3A23&page={k}' # l =과 , k = page, 큰 과 사용시
         # url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=701010{l}&queryTime=2022-04-01%2014%3A14%3A29&page={k}' # l =과 , k = page ,세부 과 사용시
         driver.get(url) #url앞의 url 받기
         time.sleep(0.01)
-        for i in range(1, 21): # page 안의 글, 총 20개
+        for i in range(1, 21): # page 안의 글, 총 20개   # 페이지 마다, 20개의 글. 페이지마다
             try:
-                crawl_data()
+                crawl_data()   #페이지마다 데이터 수집 시도한다. 리스트에 추가됨.
+                # 11페이지일때도... title list와 content list 등에 들어가지.
             except StaleElementReferenceException:
                 driver.get(url)
                 time.sleep(0.01)
                 crawl_data()
             except:
                 print('error')
-        if k % 10 == 0:
-            df_section_title = pd.DataFrame(title_list, columns=['title'])  # 리스트를 dataFrame화
+        if k % 10 == 0:   # 10의 배수 페이지가 되면..
+            # 그러다가 20페이지가 되면..
+            df_section_title = pd.DataFrame(title_list, columns=['title'])  # 리스트를 dataFrame화          # df_section_title을 만드는데,
+            # 타이틀리스트에 넣어져있는 걸 객체로 만든다.
             df_section_content = pd.DataFrame(content_list, columns=['content'])  # 리스트를 dataFrame화
             df_section_department = pd.DataFrame(department_list, columns=['department'])  # 리스트를 dataFrame화
             df_data = pd.concat([df_data, df_section_title, df_section_content, df_section_department],
                                 axis='columns', ignore_index=True)  # 만든 dataFrame 합치기, axis='columns'->옆으로 합치기
-            df_data.to_csv('./crawling_data/medical_qs_17_Family{}.csv'.format(k), index=False)  # index=False-> 만든 csv에 index 제거
-            title_list = []  # 우리가 쓸 요소 리스트 만들기
+            # df_data가 이전꺼임.
+            # df_data에 넣는다. df_data에는 지금까지 1~10에서 수집한 내용이 있다.
+            df_data.to_csv('./crawling_data/medical_qs_702_Dentist{}.csv'.format(k), index=False)  # index=False-> 만든 csv에 index 제거
+            # 그걸 저장한다.
+            title_list = []  # 우리가 쓸 요소 리스트 초기화한다.
             content_list = []
             department_list = []
+            df_data = pd.DataFrame()
+        # 11일땐 if 문실행안함.
 
 
 driver.close()
