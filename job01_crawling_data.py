@@ -38,16 +38,16 @@ driver.implicitly_wait(10)
 
 df_data = pd.DataFrame()
 
-for l in range(5,6): # 의료과 입력 1:내과 27:핵의학과
+for l in range(17,18): # 의료과 입력 1:내과 27:핵의학과
     title_list = [] # 우리가 쓸 요소 리스트 만들기
     content_list = []
     department_list = []
-    for k in range(1, 3): # 페이지 range 1 page ~ 3 page
-        # url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=7010{l}&queryTime=2022-04-01%2011%3A39%3A23&page={k}' # l =과 , k = page, 큰 과 사용시
-        url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=701010{l}&queryTime=2022-04-01%2014%3A14%3A29&page={k}' # l =과 , k = page t, 세부 과 사용시
+    for k in range(1, 101): # 페이지 range 1 page ~ 500 page
+        url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=701{l}&queryTime=2022-04-01%2011%3A39%3A23&page={k}' # l =과 , k = page, 큰 과 사용시
+        # url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=701010{l}&queryTime=2022-04-01%2014%3A14%3A29&page={k}' # l =과 , k = page ,세부 과 사용시
         driver.get(url) #url앞의 url 받기
         time.sleep(0.01)
-        for i in range(1, 5): # page 안의 글, 총 20개
+        for i in range(1, 21): # page 안의 글, 총 20개
             try:
                 crawl_data()
             except StaleElementReferenceException:
@@ -56,13 +56,17 @@ for l in range(5,6): # 의료과 입력 1:내과 27:핵의학과
                 crawl_data()
             except:
                 print('error')
+        if k % 10 == 0:
+            df_section_title = pd.DataFrame(title_list, columns=['title'])  # 리스트를 dataFrame화
+            df_section_content = pd.DataFrame(content_list, columns=['content'])  # 리스트를 dataFrame화
+            df_section_department = pd.DataFrame(department_list, columns=['department'])  # 리스트를 dataFrame화
+            df_data = pd.concat([df_data, df_section_title, df_section_content, df_section_department],
+                                axis='columns', ignore_index=True)  # 만든 dataFrame 합치기, axis='columns'->옆으로 합치기
+            df_data.to_csv('./crawling_data/medical_qs_17_Family{}.csv'.format(k), index=False)  # index=False-> 만든 csv에 index 제거
+            title_list = []  # 우리가 쓸 요소 리스트 만들기
+            content_list = []
+            department_list = []
 
-    df_section_title = pd.DataFrame(title_list, columns= ['title']) # 리스트를 dataFrame화
-    df_section_content = pd.DataFrame(content_list,  columns= ['content']) # 리스트를 dataFrame화
-    df_section_department = pd.DataFrame(department_list,  columns= ['department']) # 리스트를 dataFrame화
-    df_data= pd.concat([df_data, df_section_title,df_section_content,df_section_department],
-                       axis='columns',ignore_index=True) # 만든 dataFrame 합치기, axis='columns'->옆으로 합치기
 
 driver.close()
 df_data.info()
-df_data.to_csv('./crawling_data/naver_medicine_Internal.csv', index=False) # index=False-> 만든 csv에 index 제거
