@@ -31,7 +31,7 @@ option.add_argument('lang=ko_KR')
 option.add_argument('--no-sandbox')   #이 아래 3개는 맥 어쩌고에서 필요한 거임. 윈도우 주석 풀어놔도 괜찮음.
 option.add_argument('--disable-dev-shm-usage')
 option.add_argument('disable-gpu')
-# options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36")
+option.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.60 Safari/537.36")
 
 driver= webdriver.Chrome('./chromedriver', options = option)
 driver.implicitly_wait(10)
