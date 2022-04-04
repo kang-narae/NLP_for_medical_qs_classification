@@ -16,4 +16,4 @@ for paths in data_paths:
 print(df.head())
 df.info()
 # #
-df.to_csv('./medical_qs_Classification.csv', index = False)
+df.to_csv('./datasets/medical_qs_Classification.csv', index = False)
