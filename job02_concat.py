@@ -1,9 +1,9 @@
 import pandas as pd
 import glob
-data_paths = glob.glob('./datasets/*')
+data_paths = glob.glob('./datasets/*') # 데이터set 안의 모든 경로를 리스트로
 df = pd.DataFrame()
 for paths in data_paths:
-    paths = glob.glob(paths)
+    paths = glob.glob(paths) # 데이터 set 안의 path
     for path in paths:
         path = glob.glob(path+'/*')
         for i in path:
