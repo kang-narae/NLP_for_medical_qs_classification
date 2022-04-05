@@ -48,7 +48,6 @@ for l in range(2,3): # 의료과 입력 1:내과 27:핵의학과
     for k in range(1, 101): # 페이지 range 1 page ~ 500 page
         # 11번째 페이지에 들어가자.
         url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=70{l}&queryTime=2022-04-01%2011%3A39%3A23&page={k}' # l =과 , k = page, 큰 과 사용시
-        # url = f'https://kin.naver.com/qna/expertAnswerList.naver?dirId=701010{l}&queryTime=2022-04-01%2014%3A14%3A29&page={k}' # l =과 , k = page ,세부 과 사용시
         driver.get(url) #url앞의 url 받기
         time.sleep(0.01)
         for i in range(1, 21): # page 안의 글, 총 20개   # 페이지 마다, 20개의 글. 페이지마다
