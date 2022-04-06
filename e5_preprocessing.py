@@ -10,7 +10,7 @@ from konlpy.tag import Okt
 
 
 pd.set_option('display.unicode.east_asian_width', True)
-df = pd.read_csv('./datasets/medical_qs_all_drop_nun_drop_family_change_female.csv')
+df = pd.read_csv('./datasets/medical_qs_numbering.csv')
 # print(df.head())
 # print(df.category.value_counts())
 df.info()
@@ -26,7 +26,7 @@ encoder = LabelEncoder()   #라벨 인코더 객체를 만들어서
 labeled_Y = encoder.fit_transform(Y)   # 인코더 객체가 Y를 가지고 라벨인코딩을 한 객체가 labeled_Y. Y의 결과값이 인코딩이 됐지.
 # print(encoder.classes_)
 # print(labeled_Y[:5])
-with open('./output/encoder_tuesday.pickle', 'wb') as f:
+with open('./output/encoder_numbering.pickle', 'wb') as f:
     pickle.dump(encoder, f)
 
 onehot_Y = to_categorical(labeled_Y)
@@ -56,7 +56,7 @@ token.fit_on_texts(X)   # 이 X안에 있는 모든 토큰화된 단어를 찾�
 tokened_X = token.texts_to_sequences(X)   #리스트로 들어감.
 print(tokened_X[1])
 
-with open('./output/medical_token_tuesday.pickle', 'wb') as f:
+with open('./output/medical_token_numbering.pickle', 'wb') as f:
    pickle.dump(token, f)   #피클로 토큰 저장해놓자 .. 근데 왜 token만 저장 ? tokened_X가 아니고? 나중에 쓸 거라서.
 
 wordsize = len(token.word_index) + 1   #토큰해놓은 건 인덱스는 0없고 1부터인데, 우리가 0을 쓸 거라서 (?) +1을 함. 문장 자리수 맞추려고 앞에 0 채우는 거임.
